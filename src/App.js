@@ -1,19 +1,13 @@
-// import Counter from './features/counter/Counter';
-// import PostList from "./features/posts/PostList";
-// import AddPostForm from "./features/posts/AddPostForm";
-// import SinglePostPage from "./features/posts/SinglePostPage";
-// import EditPostForm from "./features/posts/EditPostForm";
-// import Layout from "./components/Layout";
-// import UsersList from "./features/users/UsersList";
-// import UserPage from "./features/users/userPage";
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import { PostsList } from "./features/index";
+// import PostsList from "./features/posts/PostsList";
 function App() {
-  return (<>
-  
-    <h1>jhkjh</h1>
-    <Routes>
-      {/* <Route path="/" element={<Layout />}> */}
+  return (
+    <>
+      <PostsList />
+      <Routes>
+        {/* <Route path="/" element={<Layout />}> */}
         {/* <Route index element={<PostList />} /> */}
 
         {/* <Route path="post">
@@ -28,10 +22,9 @@ function App() {
 
         {/* 에러일때 기본 페이지로 보내줌 */}
         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-      {/* </Route> */}
-    </Routes>
-  
-  </>
+        {/* </Route> */}
+      </Routes>
+    </>
   );
 }
 
