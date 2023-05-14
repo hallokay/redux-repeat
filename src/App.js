@@ -1,10 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { PostsList } from "./features/index";
+import { PostsList, AddPosts } from "./features/index";
 // import PostsList from "./features/posts/PostsList";
 function App() {
   return (
     <>
+      <AddPosts />
       <PostsList />
       <Routes>
         {/* <Route path="/" element={<Layout />}> */}
