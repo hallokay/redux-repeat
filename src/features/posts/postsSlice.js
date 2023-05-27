@@ -1,9 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { nanoid } from '@reduxjs/toolkit';
-
+import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { sub } from "date-fns";
 const initialState = [
-  { id: 1, title: "abd", content: "aslkfjl;kf;laksamf;dlkf" },
-  { id: 2, title: "slice....", content: "aslkfjl;kf;laksamf;dlkf" },
+  {
+    id: 1,
+    title: "abd",
+    content: "aslkfjl;kf;laksamf;dlkf",
+    date: sub(new Date(), { minutes: 10 }).toISOString()
+  },
+
+  {
+    id: 2,
+    title: "slice....",
+    content: "aslkfjl;kf;laksamf;dlkf",
+    date: sub(new Date(), { minutes: 5 }).toISOString()
+  },
 ];
 
 const postsSlice = createSlice({
@@ -11,16 +21,18 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     postAdded: {
-      reduce(state, action) {
-        // state.post =  
+      reducer(state, action) {
+        // console.log(action.payload);
         state.push(action.payload);
       },
-      prepare(title, content) {
+      prepare(title, content, userId) {
         return {
           payload: {
             id: nanoid(),
             title,
             content,
+            date: new Date().toISOString(),
+            userId
           }
 
         }
