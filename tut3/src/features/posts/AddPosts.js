@@ -1,27 +1,40 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { postAdded } from './postsSlice';
+import { addNewPost } from './postsSlice';
 import { selectAllUsers } from '../users/userSlice';
 const AddPosts = () => {
     const dispatch = useDispatch();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [userId, setUserId] = useState('')
+    const [userId, setUserId] = useState('');
+    const [addReqStatus, setAddReqStatus] = useState('idle');
 
     const users = useSelector(selectAllUsers);
+
+    const canSave = [title, content, userId].every(Boolean) && addReqStatus === 'idle';
 
     const onSubmitHandle = (e) => {
         e.preventDefault();
 
-        if (title && content) {
-            dispatch(postAdded(title, content, userId));
-            setTitle('');
-            setContent('');
+
+        if (canSave) {
+            try {
+                setAddReqStatus('pending');
+                dispatch(addNewPost({ title, body: content, userId })).unwrap()
+
+                setTitle('');
+                setContent('');
+                setUserId('');
+            } catch (err) {
+                console.error('게시물을 등록하는데 실패했습니다.', err);
+            } finally {
+                setAddReqStatus('idle');
+
+            }
         }
     }
 
-    const canSave = Boolean(title) && Boolean(content) && Boolean(userId)
     const usersOptios = users.map(user => (
         <option key={user.id} value={user.id}>
             {user.name}
