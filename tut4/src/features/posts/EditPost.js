@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPostById, updatePost } from './postsSlice';
+import { selectPostById, updatePost, deletePost } from './postsSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { selectAllUsers } from '../users/userSlice';
@@ -59,6 +59,22 @@ const EditPost = () => {
         </option>
     ))
 
+    const onDeleteBtn = () => {
+        try {
+            setAddReqStatus('pending');
+            dispatch(deletePost({ id: post.id })).unwrap();
+
+            setTitle('');
+            setContent('');
+            setUserId('');
+            navigate('/')
+        } catch (err) {
+            console.error('게시물을 삭제하는데 실패했습니다.', err);
+        } finally {
+            setAddReqStatus('idle');
+
+        }
+    }
 
     return (
         <section>
@@ -79,6 +95,8 @@ const EditPost = () => {
                 <textarea type='text' id='postContent' name='postContent' value={content} onChange={e => setContent(e.target.value)} />
 
                 <button type='submit' disabled={!canSave}>저장</button>
+                <button type='button' onClick={onDeleteBtn} className='deleteBtn' >삭제</button>
+
             </form>
         </section>
     )

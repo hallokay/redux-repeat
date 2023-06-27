@@ -2,8 +2,11 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addNewPost } from './postsSlice';
 import { selectAllUsers } from '../users/userSlice';
+import { useNavigate } from 'react-router-dom';
+
 const AddPosts = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -26,6 +29,7 @@ const AddPosts = () => {
                 setTitle('');
                 setContent('');
                 setUserId('');
+                navigate('/')
             } catch (err) {
                 console.error('게시물을 등록하는데 실패했습니다.', err);
             } finally {
