@@ -1,33 +1,19 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPostById, updatePost, deletePost } from './postsSlice';
-import { useParams, useNavigate } from 'react-router-dom';
-
+import { addNewPost } from './postsSlice';
 import { selectAllUsers } from '../users/userSlice';
+import { useNavigate } from 'react-router-dom';
 
-const EditPost = () => {
-    const { postId } = useParams();
-    const navigate = useNavigate();
+const AddPosts = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-
-
-    const post = useSelector((state) => selectPostById(state, Number(postId)))
-    const users = useSelector(selectAllUsers);
-    console.log(post);
-    const [title, setTitle] = useState(post?.title);
-    const [content, setContent] = useState(post?.body);
-    const [userId, setUserId] = useState(post?.userId);
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [userId, setUserId] = useState('');
     const [addReqStatus, setAddReqStatus] = useState('idle');
 
-    if (!post) {
-        return (
-            <section>
-                <h2>게시물을 찾지 못했습니다.</h2>
-            </section>
-        )
-    }
-
+    const users = useSelector(selectAllUsers);
 
     const canSave = [title, content, userId].every(Boolean) && addReqStatus === 'idle';
 
@@ -38,12 +24,12 @@ const EditPost = () => {
         if (canSave) {
             try {
                 setAddReqStatus('pending');
-                dispatch(updatePost({ id: post.id, title, body: content, userId, reactions: post.reactions })).unwrap()
+                dispatch(addNewPost({ title, body: content, userId })).unwrap()
 
                 setTitle('');
                 setContent('');
                 setUserId('');
-                navigate(`/post/${[postId]}`)
+                navigate('/')
             } catch (err) {
                 console.error('게시물을 등록하는데 실패했습니다.', err);
             } finally {
@@ -59,34 +45,18 @@ const EditPost = () => {
         </option>
     ))
 
-    const onDeleteBtn = () => {
-        try {
-            setAddReqStatus('pending');
-            dispatch(deletePost({ id: post.id })).unwrap();
-
-            setTitle('');
-            setContent('');
-            setUserId('');
-            navigate('/')
-        } catch (err) {
-            console.error('게시물을 삭제하는데 실패했습니다.', err);
-        } finally {
-            setAddReqStatus('idle');
-
-        }
-    }
 
     return (
         <section>
             <h2>
-                게시물 수정
+                게시물 추가
             </h2>
             <form onSubmit={onSubmitHandle}>
                 <label htmlFor='postTitle'>제목</label>
                 <input type='text' id='postTitle' name='postTitle' value={title} onChange={e => setTitle(e.target.value)} />
 
                 <label htmlFor='author' >글쓴이</label>
-                <select id='author' defaultValue={userId} onChange={(e) => setUserId(Number(e.target.value))}>
+                <select id='author' value={userId} onChange={(e) => setUserId(e.target.value)}>
                     <option value=""></option>
                     {usersOptios}
                 </select>
@@ -95,10 +65,9 @@ const EditPost = () => {
                 <textarea type='text' id='postContent' name='postContent' value={content} onChange={e => setContent(e.target.value)} />
 
                 <button type='submit' disabled={!canSave}>저장</button>
-                <button type='button' onClick={onDeleteBtn} className='deleteBtn' >삭제</button>
-
             </form>
         </section>
     )
 }
-export default EditPost
+
+export default AddPosts
